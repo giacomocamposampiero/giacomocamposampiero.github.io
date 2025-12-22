@@ -4,7 +4,6 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
-  site: "https://giacomocamposampiero.github.io",
-  base: '/giacomocamposampiero.github.io',
+  site: "https:/giacomocamposampiero.github.io",
   integrations: [mdx(), sitemap(), tailwind()],
 });
