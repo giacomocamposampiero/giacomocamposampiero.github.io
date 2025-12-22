@@ -1,0 +1,104 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import Link from "@components/Link.astro";
+import { dateRange } from "@lib/utils";
+import { SITE, HOME, SOCIALS } from "@consts";
+
+const blog = (await getCollection("blog"))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0,SITE.NUM_POSTS_ON_HOMEPAGE);
+
+const pub = (await getCollection("pub"))
+  .sort(post => post.data.year.valueOf())
+  .filter(post => post.data.selected);
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <Container>
+
+    <!-- INTRO -->
+    <div class="space-y-16">
+      <section class="space-y-6">
+        <h4 class="font-semibold text-black dark:text-white space-y-6">
+          Hi, I'm Giacomo <span class="text-xl">👋🏻</span> 
+        </h4>
+        <article class="space-y-4" style="text-align: justify; text-justify: inter-word">
+            I am a predoctoral researcher at IBM Research and a doctorate student in the 
+            <Link href="https://disco.ethz.ch" aria-label="DISCO website" external>
+              DISCO 
+            </Link> group at ETH Zürich.
+            I work on compositionality and systematic generalization, with the goal of improving the 
+            reasoning capabilities, sample efficiency, and robustness of neural models.
+            Previously, I obtained my MSc in Computer Science from ETH Zürich and my BSc in Computer Engineering 
+            from the University of Padua.
+            If you want to get in touch with me, reach out on social media or send me an email.
+        </article>
+        <ul class="flex flex-wrap gap-2">
+          <li class="line-clamp-1">
+            {"/"} name [dot] surname [at] hotmail.com {"/"}
+          </li>
+          {SOCIALS.map(SOCIAL => (
+            <li class="flex gap-x-2 text-nowrap">
+              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
+                {SOCIAL.NAME}
+              </Link>
+              {"/"}
+            </li>
+          ))}
+        </ul>
+      </section>
+      
+      <!-- SELECTED PUBLICATIONS -->
+      <section class="space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            Selected Publications <span class="text-xl">📚</span> 
+          </h5>
+          <Link href="/giacomocamposampiero.github.io/pub">
+            See all publications
+          </Link>
+        </div>
+        <ul class="flex flex-col space-y-4">
+          {pub.map(entry => (
+            <li>
+              <div class="text-black dark:text-white">
+                <Link href={entry.data.paper_link} external>
+                  {entry.data.title}
+                </Link>
+              </div>
+              <div class="text-sm opacity-75 text-black dark:text-white">
+                {entry.data.authors}
+              </div>
+              <div class="text-sm text-black dark:text-white">
+                {entry.data.venue}, {entry.data.year} {entry.data.award ? <text style="color:chocolate">[{entry.data.award}]</text> : ""}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- POSTS -->
+      <section class="space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            Latest posts <span class="text-xl">✏️</span> 
+          </h5>
+          <Link href="/giacomocamposampiero.github.io/blog">
+            See all posts
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {blog.map(post => (
+            <li>
+              <ArrowCard entry={post} />
+            </li>
+          ))}
+        </ul>
+      </section> 
+    </div>
+  </Container>
+</PageLayout>

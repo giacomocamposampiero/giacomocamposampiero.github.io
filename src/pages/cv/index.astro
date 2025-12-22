@@ -1,0 +1,80 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import { dateRange } from "@lib/utils";
+import { HOME } from "@consts";
+
+const allwork = (await getCollection("work"))
+  .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf());
+
+const work = await Promise.all(
+  allwork.map(async (item) => {
+    const { Content } = await item.render();
+    return { ...item, Content };
+  })
+);
+
+const alledu = (await getCollection("edu"))
+  .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf());
+
+const edu = await Promise.all(
+  alledu.map(async (item) => {
+    const { Content } = await item.render();
+    return { ...item, Content };
+  })
+);
+---
+
+<PageLayout title=`Curriculum Vitae` description=`An overview of my education and work experience.`>
+  <Container>
+      <div class="space-y-10">
+        
+        <section class="space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            Work Experience
+          </h5>
+        </div>
+        <ul class="flex flex-col space-y-4" style="margin-left: 30px;">
+          {work.map(entry => (
+            <li>
+              <div class="text-black dark:text-white">
+                {entry.data.role}, {entry.data.company}
+              </div>
+              <div class="text-sm opacity-75">
+                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+              </div>
+              <article>
+                <entry.Content />
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="space-y-6">
+            <div class="flex flex-wrap gap-y-2 items-center justify-between">
+              <h5 class="font-semibold text-black dark:text-white">
+                Education
+              </h5>
+            </div>
+            <ul class="flex flex-col space-y-4" style="margin-left: 30px;">
+              {edu.map(entry => (
+                <li>
+                  <div class="text-black dark:text-white">
+                    {entry.data.program}, {entry.data.school}
+                  </div>
+                  <div class="text-sm opacity-75">
+                    {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+                  </div>
+                  <article>
+                    <entry.Content />
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </section>
+    </div>
+  </Container>
+</PageLayout>

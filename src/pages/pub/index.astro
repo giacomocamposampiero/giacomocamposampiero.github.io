@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+
+
+const pub = (await getCollection("pub"))
+  .sort((a) => a.data.year.valueOf() );
+
+---
+
+<PageLayout title=`Publications` description=`A comprehensive list of my publications.`>
+  <Container>
+    
+    <div class="space-y-10">
+      <section class="space-y-6">
+        <ul class="flex flex-col space-y-4">
+          {pub.map(entry => (
+            <li>
+              <div class="text-black dark:text-white">
+                <Link href={entry.data.paper_link} external>
+                  {entry.data.title}
+                </Link>
+              </div>
+              <div class="text-sm opacity-75 text-black dark:text-white">
+                {entry.data.authors}
+              </div>
+              <div class="text-sm text-black dark:text-white">
+                {entry.data.venue}, {entry.data.year} {entry.data.award ? <text style="color:chocolate">[{entry.data.award}]</text> : ""}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </Container>
+</PageLayout>
