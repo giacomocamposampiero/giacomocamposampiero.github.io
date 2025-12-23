@@ -6,7 +6,7 @@ import Link from "@components/Link.astro";
 
 
 const pub = (await getCollection("pub"))
-  .sort((a) => a.data.year.valueOf() );
+  .sort((a) => -a.data.year.valueOf() );
 
 ---
 
