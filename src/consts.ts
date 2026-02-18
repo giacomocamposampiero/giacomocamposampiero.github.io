@@ -2,7 +2,7 @@ import type { Site, Metadata, Socials } from "@types";
 
 export const SITE: Site = {
   AUTHOR: "Giacomo Camposampiero",
-  NAME: "Giacomo Camposampiero Personal Website",
+  NAME: "Giacomo Camposampiero",
   NUM_POSTS_ON_HOMEPAGE: 3,
   NUM_WORKS_ON_HOMEPAGE: 2,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
